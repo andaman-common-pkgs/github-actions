@@ -46,12 +46,15 @@ jobs:
       - name: Add repository
         run: |
           dnf config-manager --add-repo https://github.com/andaman-common-pkgs/subatomic-repos/raw/main/${{ inputs.subatomicRepo }}.repo
-      - name: Install mock configs
+      - name: Install packages
         run: |
           dnf install -y createrepo_c git gcc curl wget anda subatomic-cli ${{ inputs.mockConfigPackage }}
       - uses: actions/checkout@v3
         with:
           submodules: "recursive"
+          fetch-depth: 1
+      - name: Set up git repository
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
       - name: Build with Anda
         run: anda build ${{ inputs.name }} --package rpm -c ${{ inputs.mockConfig }} 2>&1
       - name: Upload Build as Artifact
