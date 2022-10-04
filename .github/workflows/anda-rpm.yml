@@ -54,13 +54,11 @@ jobs:
           submodules: "recursive"
       - name: Build with Anda
         run: anda build ${{ inputs.name }} --package rpm -c ${{ inputs.mockConfig }} 2>&1
-      - name: Pack Build
-        run: tar -cf anda-build.tar anda-build
       - name: Upload Build as Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: anda-build-${{ inputs.runsOn }}.tar
-          path: anda-build.tar
+          name: anda-build-rpm
+          path: anda-build/rpm/**/*.rpm
       - name: Upload to Subatomic
         run: subatomic-cli upload --server ${{ inputs.subatomicServer }} --token ${{ secrets.subatomicToken }} ${{ inputs.subatomicRepo }} anda-build/rpm/rpms/*
         if: ${{ inputs.upload }}
