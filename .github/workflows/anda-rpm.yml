@@ -29,7 +29,7 @@ on:
         type: string
       extraInitRepos:
         required: false
-        type: list
+        type: string
     secrets:
       subatomicToken:
         required: false
@@ -49,6 +49,15 @@ jobs:
       - name: Add repository
         run: |
           dnf config-manager --add-repo https://github.com/andaman-common-pkgs/subatomic-repos/raw/main/${{ inputs.subatomicRepo }}.repo
+
+      - name: Add extra repositories
+        if: inputs.extraInitRepos
+        run: |
+          # separate by comma
+          for repo in $(echo ${{ inputs.extraInitRepos }} | sed "s/,/ /g")
+          do
+            dnf config-manager --add-repo $repo
+          done
       - name: Install packages
         run: |
           dnf install -y createrepo_c git gcc curl wget anda subatomic-cli ${{ inputs.mockConfigPackage }}
