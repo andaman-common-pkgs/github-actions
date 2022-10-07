@@ -27,6 +27,9 @@ on:
       mockConfigPackage:
         required: true
         type: string
+      extraInitRepos:
+        required: false
+        type: list
     secrets:
       subatomicToken:
         required: false
