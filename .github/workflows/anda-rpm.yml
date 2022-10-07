@@ -53,9 +53,9 @@ jobs:
       - name: Add extra repositories
         if: inputs.extraInitRepos
         run: |
-          # separate by comma
-          for repo in $(echo ${{ inputs.extraInitRepos }} | sed "s/,/ /g")
-          do
+          # separate by comma and add each repo
+          IFS=',' read -ra EXTRA_REPOS <<< "${{ inputs.extraInitRepos }}"
+          for repo in "${EXTRA_REPOS[@]}"; do
             dnf config-manager --add-repo $repo
           done
       - name: Install packages
